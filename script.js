@@ -1,15 +1,31 @@
 let currentMessageIndex = 0;
 let currentConversationIndex = 0;
 const userMessages = [
-  "hello! how r u?",
-  "how's the family?",
-  "did you get my email?",
+  "hey teacher!",
+  "i know that the deadline for the final project is in an hour, but can i get an extension for next week?",
+  "but my dog ate my homework!",
+  "i'm not lying! i swear!",
+  "okay! ill come clean. i didn't do the project because i was too busy playing fortnite.",
+  "i'm sorry! i'll be on time next time! i promise!"
 ];
-const botMessages = ["great!", "they're alright.", "nope."];
+
+const botMessages = [
+  "Hello, how can I help you?",
+  "I'm sorry, but the deadline is in an hour. You can't get an extension.",
+  "this is a coding project....?",
+  "your dog ate your laptop? really? even i could come up with a better excuse than that!",
+  "manage your time better!",
+  "i hope you will."
+];
 
 const userInputField = document.getElementById("user-input");
 let lastKeyPressed = "";
 let keyPressCount = 0;
+
+window.onload = function() {
+  document.getElementById("user-input").value = "";
+};
+
 
 userInputField.addEventListener("keydown", function (e) {
   if (currentConversationIndex >= userMessages.length) {
@@ -50,7 +66,7 @@ userInputField.addEventListener("keydown", function (e) {
   }
 });
 
-document.getElementById("send-btn").addEventListener("click", function () {
+document.getElementById("send-btn").addEventListener("click", function () {   
   if (currentMessageIndex === userMessages[currentConversationIndex].length) {
     sendMessage();
   }
@@ -69,21 +85,27 @@ function sendMessage() {
   var userInput = userInputField.value;
   if (userInput) {
     displayMessage("You: " + userInput);
+
+
     setTimeout(function () {
-      displayMessage("Bot: " + botMessages[currentConversationIndex]);
+      
+      displayMessage("Teacher: " + botMessages[currentConversationIndex]);
       currentConversationIndex++;
 
-      if (currentConversationIndex >= botMessages.length) {
-        // Remove the send button, and change the HTML of the input field to "you cannot send a message"
-        document.getElementById("send-btn").remove();
-        userInputField.placeholder = "You cannot send a message.";
-        //change the chat banner to red, and say "blocked by: Bot"
-       // document.getElementById("chat-banner").style.backgroundColor = "red";
-
-        // Disable input field
+      if (currentConversationIndex >= userMessages.length) {
+        // Disable input field once the conversation ends       
         userInputField.disabled = true;
+        
+        // Change input field text
+        userInputField.value = "Ding Dong! The chat is closed";
+        
+        document.getElementById("send-btn").remove(); // Remove send button
+        // Change chat-banner style and text
+        var chatBanner = document.getElementsByClassName("chat-banner")[0];
+        chatBanner.style.backgroundColor = "red"; // Change banner background to red
+        chatBanner.textContent = "session closed"; // Change banner text to "Blocked"
       }
-    }, 500);
+    }, 1200); // Corrected timeout duration
     currentMessageIndex = 0;
     userInputField.value = "";
     lastKeyPressed = "";
@@ -91,10 +113,19 @@ function sendMessage() {
   }
 }
 
+
 function displayMessage(message) {
   var chatBox = document.getElementById("chat-box");
   var newMessage = document.createElement("div");
+
+  if (message.startsWith("You: ")) {
+      newMessage.className = "user-message";
+  } else if (message.startsWith("Teacher: ")) {
+      newMessage.className = "bot-message";
+  }
+
   newMessage.textContent = message;
   chatBox.appendChild(newMessage);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
 }
+
