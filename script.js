@@ -1,5 +1,8 @@
 let currentMessageIndex = 0;
 let currentConversationIndex = 0;
+let ping = new Audio('ping.wav');
+let dc = new Audio('dc.wav');
+
 const userMessages = [
   "hey teacher!",
   "i know that the deadline for the final project is in an hour, but can i get an extension for next week?",
@@ -90,11 +93,17 @@ function sendMessage() {
     setTimeout(function () {
       
       displayMessage("Teacher: " + botMessages[currentConversationIndex]);
+
+     ping.play();
+    
       currentConversationIndex++;
+      console.log(currentConversationIndex);
 
       if (currentConversationIndex >= userMessages.length) {
         // Disable input field once the conversation ends       
         userInputField.disabled = true;
+        dc.play();
+        
         
         // Change input field text
         userInputField.value = "Ding Dong! The chat is closed";
